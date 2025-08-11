@@ -1,0 +1,34 @@
+{
+  "name": "construction-tech-start-up",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:migrate": "dotenv -e .env.test prisma migrate deploy",
+    "test:seed": "dotenv -e .env.test node src/tests/utils/seedTestData.js",
+    "test:init": "npm run test:migrate",
+    "test": "npm run test:init && dotenv -e .env.test jest --runInBand --detectOpenHandles",
+    "test:reset": "dotenv -e .env.test prisma migrate reset --force && npm test",
+    "test:dev": "dotenv -e .env.test jest --watch --runInBand",
+    "db:reset": "dotenv -e .env.test prisma migrate reset --force && dotenv -e .env.test prisma migrate deploy && npm run test:seed",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.13.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.1",
+    "dotenv-cli": "^10.0.0",
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
+  }
+}

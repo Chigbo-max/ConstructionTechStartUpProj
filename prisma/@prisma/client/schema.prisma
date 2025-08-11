@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum userRole {
+  HOMEOWNER
+  CONTRACTOR
+  OTHER
+}
+
+model User {
+  id                    String   @id @default(uuid())
+  name                  String
+  email                 String   @unique
+  passwordHash          String
+  role                  userRole
+  professionDescription String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  projects Project[] @relation("UserProjects")
+  bids     Bid[]     @relation("UserBids")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  ownerId     String
+  status      String
+  budget      Float
+  startDate   DateTime
+  endDate     DateTime
+  address     String
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner      User        @relation("UserProjects", fields: [ownerId], references: [id])
+  bids       Bid[]
+  milestones Milestone[]
+}
+
+model Bid {
+  id                 String   @id @default(uuid())
+  projectId          String
+  contractorId       String
+  amount             Float
+  proposal           String
+  status             String
+  estimatedStartDate DateTime
+  estimatedEndDate   DateTime
+  createdAt          DateTime @default(now())
+
+  project    Project @relation(fields: [projectId], references: [id])
+  contractor User    @relation("UserBids", fields: [contractorId], references: [id])
+}
+
+model Milestone {
+  id          String   @id @default(uuid())
+  projectId   String
+  title       String
+  description String
+  dueDate     DateTime
+  status      String
+  createdAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
+}
