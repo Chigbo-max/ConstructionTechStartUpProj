@@ -13,18 +13,20 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/bids', bidRoutes);
 app.use('/api/milestones', milestoneRoutes);
 
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use((err, req, res, next) => {
-    res.status(500).json({ message: "Something went wrong!" });
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {});
-};
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
 module.exports = app;

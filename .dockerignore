@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+yarn-error.log
+.git
+.gitignore
+.DS_Store
+.env
+.env.*
+coverage
+.vscode
+**/*.test.js
+src/tests
+jest.*
+
+
